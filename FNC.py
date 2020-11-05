@@ -47,47 +47,51 @@ def enFNC(A):
 # Input: A (cadena) en notacion inorder
 # Output: B (cadena), Tseitin
 def Tseitin(A, letrasProposicionalesA):
-    letrasProposicionalesB = [chr(x) for x in range(256, 1200)]
+    letrasProposicionalesB = [chr(x) for x in range(65, 91)]
+    letrasProposicionales = letrasProposicionalesA + letrasProposicionalesB
     assert(not bool(set(letrasProposicionalesA) & set(letrasProposicionalesB))), u"¡Hay letras proposicionales en común!"
 
-    L = []
-    pila = []
-    i = -1
-    s = A[0]
+    L = [] #Donde guardare las conjunciones
+    Pila = [] # Inicializacion pila
+    i = -1 # Inicializacion count nuevas variables 
+    s = A[0] # Inicializacion sımbolo de trabajo
     
-    while len(A) > 0:
-        if (s in letrasProposicionalesA) and (len(pila) != 0) and (pila[-1] == '-'):
+    while (len(A) > 0):
+        if s in letrasProposicionales and len(Pila)>0 and Pila[-1] =='-':
             i += 1
-            atomo = letrasProposicionalesB[i]
-            pila = pila[:-1]
-            L.append(atomo + '=' + '-' + s)
+            Atomo = letrasProposicionalesB[i]
+            Pila = Pila[:-1]
+            Pila.append(Atomo)
+            L.append(Atomo + '=' + '-' + s)
             A = A[1:]
             if len(A) > 0:
                 s = A[0]
         elif s == ')':
-            w = pila[-1]
-            u = pila[-2]
-            v = pila[-3]
-            pila = pila[:len(pila)-4]
-            i+=1
-            atomo = letrasProposicionalesB[i]
-            L.append(atomo +"="+"(" + v + u + w + ")")
-            s = atomo
+            w = Pila[-1]
+            O = Pila[-2]
+            v = Pila[-3]
+            Pila = Pila[:len(Pila)-4]
+            i += 1
+            Atomo = letrasProposicionalesB[i]
+            L.append(Atomo +"="+"(" + v + O + w + ")")
+            s = Atomo
         else:
-            pila.append(s)
+            Pila.append(s)
             A = A[1:]
             if len(A) > 0:
                 s = A[0]
-    B = ''
+
+    B = ""
     if i < 0:
-        atomo = pila[-1]
+        Atomo = Pila[-1]
     else:
-        atomo = letrasProposicionalesB[i]
+        Atomo = letrasProposicionalesB[i]
     for x in L:
         y = enFNC(x)
-        B += 'Y' + y
-        
-    B = atomo + B
+        B += "Y" + y
+
+    B = Atomo + B
+
     return B
     #  IMPLEMENTAR AQUI ALGORITMO TSEITIN
         
